@@ -1,5 +1,6 @@
 from datetime import datetime
 import pytest
+import sys
 
 
 PYTEST_TO_TESTRAIL_STATUS = {
@@ -17,6 +18,7 @@ ADD_TESTRUN_URL = 'add_run/{}'
 GET_TESTRUN_URL = 'get_runs/{}'
 GET_TESTS_IN_RUN_URL = 'get_tests/{}'
 UPDATE_TESTRUN_URL = 'update_run/{}'
+GET_CASES_IN_SUITE = 'get_cases/{}&suite_id={}'
 
 
 def testrail(*ids):
@@ -87,6 +89,7 @@ class TestRailPlugin(object):
     @pytest.hookimpl(trylast=True)
     def pytest_collection_modifyitems(self, session, config, items):
         tr_keys = get_testrail_keys(items)
+        self.is_case_in_suite(tr_keys, self.suite_id, self.project_id)
         if self.testrun_id is not 0 and self.update is True:
             self.update_testrun(tr_keys, self.testrun_id)
         else:
@@ -147,6 +150,7 @@ class TestRailPlugin(object):
 
         :param list items: collected testrail ids.
         """
+
         data = {
             'suite_id': suite_id,
             'name': testrun_name,
@@ -159,6 +163,8 @@ class TestRailPlugin(object):
             data,
             self.cert_check
         )
+        
+
         for key, _ in response.items():
             if key == 'error':
                 print('Failed to create testrun: {}'.format(response))
@@ -210,3 +216,17 @@ class TestRailPlugin(object):
             data,
             self.cert_check
         )
+
+    def is_case_in_suite(self, case_ids, suite_id, project_id):
+        suite_cases = self.client.send_get(
+           GET_CASES_IN_SUITE.format(project_id,suite_id),
+           self.cert_check
+        )
+        cases = []
+        for each in suite_cases:
+            cases.append(each['id'])
+        notin = []
+        for case in case_ids:
+            if case not in cases:
+                notin.append(case)
+        assert len(notin) is 0, "The following cases were not part of the suite: " + str(notin)
