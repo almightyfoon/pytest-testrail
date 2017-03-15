@@ -56,3 +56,7 @@ This flag can be used prevent checking for a valid SSL certificate on TestRail h
 	
 This flag will check for a run with the same name as the one provided and will update that run instead of creating a new one.
 It will also add results to a testrun that were not part of the test run.	
+
+	--close-on-complete
+
+This flag will close a run if all tests have been passed and there are no untested tests. It is not compatible with the --update-existing-run flag.	
