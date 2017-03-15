@@ -129,7 +129,10 @@ class TestRailPlugin(object):
                 self.cert_check
             )
         if self.close:
-            self.close_run_on_complete(self.testrun_id)
+            try:
+                self.close_run_on_complete(self.testrun_id)
+            except:
+                print(self.client.send_get(GET_SINGLE_RUN.format(self.testrun_id)))
 
     # plugin
 
