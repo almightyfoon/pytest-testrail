@@ -20,6 +20,7 @@ GET_TESTS_IN_RUN_URL = 'get_tests/{}'
 UPDATE_TESTRUN_URL = 'update_run/{}'
 GET_CASES_IN_SUITE = 'get_cases/{}&suite_id={}'
 CLOSE_RUN_URL = 'close_run/{}'
+GET_SINGLE_RUN = 'get_run/{}'
 
 
 def testrail(*ids):
@@ -196,10 +197,10 @@ class TestRailPlugin(object):
 
     def close_run_on_complete(self, run_id):
         run = self.client.send_get(
-            GET_TESTRUN_URL.format(run_id),
+            GET_SINGLE_RUN.format(run_id),
             self.cert_check
         )
-        if run[u'failed_count'] == 0 and run[u'untested_count'] == 0:
+        if not run[u'is_completed'] and run[u'failed_count'] == 0 and run[u'untested_count'] == 0:
             self.client.send_post(CLOSE_RUN_URL.format(run_id), self.cert_check)
 
     def get_run_tests(self, run_id):
