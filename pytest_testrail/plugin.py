@@ -129,10 +129,8 @@ class TestRailPlugin(object):
                 self.cert_check
             )
         if self.close:
-            try:
-                self.close_run_on_complete(self.testrun_id)
-            except:
-                print(self.client.send_get(GET_SINGLE_RUN.format(self.testrun_id)))
+            print ("Closing run {}".format(self.testrun_id))
+            self.close_run_on_complete(self.testrun_id)
 
     # plugin
 
@@ -203,8 +201,8 @@ class TestRailPlugin(object):
             GET_SINGLE_RUN.format(run_id),
             self.cert_check
         )
-        if not run[u'is_completed'] and run[u'failed_count'] == 0 and run[u'untested_count'] == 0:
-            self.client.send_post(CLOSE_RUN_URL.format(run_id), self.cert_check)
+        if run[u'failed_count'] == 0 and run[u'untested_count'] == 0:
+            self.client.send_post(uri=CLOSE_RUN_URL.format(run_id), data='', cert_check=self.cert_check)
 
     def get_run_tests(self, run_id):
         test_raw = self.client.send_get(
