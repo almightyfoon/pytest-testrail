@@ -16,7 +16,7 @@ Installation
 Configuration
 -------------
 
-Add a marker to the tests that will be picked up to be added to the run.
+Add a marker to the tests that will be picked up to be added to the run. If the test is not part of the suite, it will raise an exception and let you know which test is not part of the suite.
 
 	from pytest_testrail.plugin import testrail
 
