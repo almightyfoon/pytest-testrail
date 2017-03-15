@@ -19,6 +19,7 @@ GET_TESTRUN_URL = 'get_runs/{}'
 GET_TESTS_IN_RUN_URL = 'get_tests/{}'
 UPDATE_TESTRUN_URL = 'update_run/{}'
 GET_CASES_IN_SUITE = 'get_cases/{}&suite_id={}'
+CLOSE_RUN_URL = 'close_run/{}'
 
 
 def testrail(*ids):
@@ -73,7 +74,7 @@ def get_testrail_keys(items):
 
 class TestRailPlugin(object):
     def __init__(
-            self, client, assign_user_id, project_id, suite_id, cert_check, tr_name, update):
+            self, client, assign_user_id, project_id, suite_id, cert_check, tr_name, update, close):
         self.assign_user_id = assign_user_id
         self.cert_check = cert_check
         self.client = client
@@ -82,7 +83,8 @@ class TestRailPlugin(object):
         self.suite_id = suite_id
         self.testrun_name = tr_name
         self.testrun_id = self.get_testrun_by_name(tr_name, project_id)
-        self.update= update
+        self.update = update
+        self.close = close
 
     # pytest hooks
 
@@ -125,6 +127,8 @@ class TestRailPlugin(object):
                 data,
                 self.cert_check
             )
+        if self.close:
+            self.close_run_on_complete(self.testrun_id)
 
     # plugin
 
@@ -189,6 +193,14 @@ class TestRailPlugin(object):
                     run_id = 0
         return run_id
     
+
+    def close_run_on_complete(self, run_id):
+        run = self.client.send_get(
+            GET_TESTRUN_URL.format(run_id),
+            self.cert_check
+        )
+        if not run[u'is_completed'] and run[u'failed_count'] == 0 and run[u'untested_count'] == 0:
+            self.client.send_post(CLOSE_RUN_URL.format(run_id), self.cert_check)
 
     def get_run_tests(self, run_id):
         test_raw = self.client.send_get(

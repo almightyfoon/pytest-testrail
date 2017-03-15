@@ -31,6 +31,13 @@ def pytest_addoption(parser):
         required=False,
         help='Updates an existing run if one is found'
     )
+    group.addoption(
+        '--close-on-complete',
+        action='store_true',
+        default=False,
+        required=False,
+        help='Closes a completed, fully passed test run on completion.'        
+    )
 
 
 def pytest_configure(config):

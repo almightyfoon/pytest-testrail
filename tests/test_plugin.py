@@ -30,7 +30,7 @@ def api_client():
 
 @pytest.fixture
 def tr_plugin(api_client):
-    return TestRailPlugin(api_client, ASSIGN_USER_ID, PROJECT_ID, SUITE_ID, True, TR_NAME, True)
+    return TestRailPlugin(api_client, ASSIGN_USER_ID, PROJECT_ID, SUITE_ID, True, TR_NAME, True, True)
 
 
 @pytest.fixture
