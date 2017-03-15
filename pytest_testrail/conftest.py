@@ -49,11 +49,14 @@ def pytest_configure(config):
         ssl_cert_check = True
         tr_name = config.getoption('--tr_name')
         update_existing = False
+        close = False
 
         if config.getoption('--no-ssl-cert-check') is True:
             ssl_cert_check = False
         if config.getoption('--update-existing-run') is True:
             update_existing = True
+        if config.getoption('--close-on-complete') is True:
+            close = True    
 
         config.pluginmanager.register(
             TestRailPlugin(
@@ -63,7 +66,8 @@ def pytest_configure(config):
                 suite_id=cfg_file.get('TESTRUN', 'suite_id'),
                 cert_check=ssl_cert_check,
                 tr_name=tr_name,
-                update=update_existing
+                update=update_existing,
+                close=close
             )
         )
 
