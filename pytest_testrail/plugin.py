@@ -199,7 +199,7 @@ class TestRailPlugin(object):
             GET_TESTRUN_URL.format(run_id),
             self.cert_check
         )
-        if not run[u'is_completed'] and run[u'failed_count'] == 0 and run[u'untested_count'] == 0:
+        if run[u'failed_count'] == 0 and run[u'untested_count'] == 0:
             self.client.send_post(CLOSE_RUN_URL.format(run_id), self.cert_check)
 
     def get_run_tests(self, run_id):
