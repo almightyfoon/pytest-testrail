@@ -11,8 +11,10 @@
 #
 
 import requests
+import urllib3
 import simplejson as json
 
+urllib3.disable_warnings()
 
 class APIClient:
     def __init__(self, base_url):

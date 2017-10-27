@@ -6,7 +6,7 @@ setup(
     name='pytest-testrail',
     description='pytest plugin for creating TestRail runs and adding results',
     long_description=long_description,
-    version='0.0.11',
+    version='0.0.11.01',
     author='Allan Kilpatrick',
     author_email='allanklp@gmail.com',
     url='http://github.com/allankilpatrick/pytest-testrail/',
@@ -17,7 +17,7 @@ setup(
     install_requires=[
         'pytest>=2',
         'configparser>=3,<4',
-        'requests==2.11.1',
+        'requests>=2.13.0',
         'simplejson'
     ],
     include_package_data=True,
